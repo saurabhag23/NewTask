@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    command: gunicorn your_project_name.wsgi:application --bind 0.0.0.0:8000
+    # Replace 'your_project_name' with the actual Django project name.
+    # Example: If your project name is 'finance', then replace 'your_project_name' with 'finance',
+    # so the command will be: gunicorn finance.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    # Maps the current directory (project root) to the /app directory inside the container.
+    ports:
+      - "8000:8000"
+    # Maps port 8000 of the container to port 8000 on the host, making the app accessible externally.
+    environment:
+      - DEBUG=0  # Set to 0 for production. Change to 1 for debug mode if needed.
+      - SECRET_KEY=YourSecretKeyHere  # Replace 'YourSecretKeyHere' with your actual Django secret key.
+      - DATABASE_URL=postgres://dbuser:dbpassword@db:5432/dbname
+      # Replace 'dbuser', 'dbpassword', and 'dbname' with your actual database username, password, and database name.
+    depends_on:
+      - db
+    # Ensures that the 'db' service is started before the 'web' service.
+
+  db:
+    image: postgres
+    # Uses the official PostgreSQL image from Docker Hub.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    # Persists PostgreSQL data between container restarts.
+    environment:
+      - POSTGRES_USER=dbuser  # Database username, replace 'dbuser' with your desired username.
+      - POSTGRES_PASSWORD=dbpassword  # Database password, replace 'dbpassword' with your desired password.
+      - POSTGRES_DB=dbname  # Database name, replace 'dbname' with your desired database name.
+
+volumes:
+  postgres_data:
+  # Defines a volume named 'postgres_data' that persists the database data.
