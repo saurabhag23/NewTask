@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backtest Results</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding-top: 20px; }
+        .container { max-width: 700px; }
+        .result-value { font-size: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Backtest Results</h1>
+    <p><strong>Initial Investment:</strong> <span class="result-value">${{ initial_investment }}</span></p>
+    <p><strong>Final Amount:</strong> <span class="result-value">${{ final_amount }}</span></p>
+    <p><strong>Total Return:</strong> <span class="result-value">${{ total_return }}</span></p>
+    <p><strong>Max Drawdown:</strong> <span class="result-value">{{ max_drawdown|floatformat:2 }}%</span></p>
+    <h2>Trades</h2>
+    <ul>
+        {% for trade in trades %}
+            <li>{{ trade.date }}: {{ trade.action|capfirst }} at ${{ trade.price|floatformat:2 }}</li>
+        {% empty %}
+            <li>No trades executed.</li>
+        {% endfor %}
+    </ul>
+    <a href="/stocks/backtest/" class="btn btn-primary">Back to Form</a>
+</div>
+</body>
+</html>
